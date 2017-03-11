@@ -1,0 +1,145 @@
+#include "Queue.h"
+
+bool InitQueue(LinkQueue & Q){
+	
+	Q.Front=Q.Rear=(QueuePer) malloc (sizeof(QNode));
+	
+	if(!Q.Front) return false;
+	
+	Q.Rear->next=NULL;
+	
+	return true;	
+	
+}
+
+
+bool DestoryQueue(LinkQueue & Q){
+	
+	while(Q.Front){
+		
+	    QueuePer p=Q.Front->next;
+		
+		free(Q.Front);
+		
+		Q.Front=p;
+		
+	}
+	
+	return true;	
+	
+}
+
+bool EnQueue(LinkQueue & Q,QElemType e){
+	
+	if(!Q.Front) return false;
+	//队列不存在
+	QueuePer p=(QueuePer) malloc (sizeof(QNode)); 
+	if(!p) return false;
+	//OVERFLOW 
+	p->data=e;
+	p->next=NULL;
+	Q.Rear->next=p;
+	Q.Rear=p;
+	return true;	
+	
+}
+
+bool DeQueue(LinkQueue & Q,QElemType &e){
+	
+	if(!Q.Front) return false;
+	//队列不存在 
+	if(Q.Front==Q.Rear) return false;
+	//队列为空 
+	QueuePer p=Q.Front->next;
+	e=p->data;
+	Q.Front->next=p->next;
+	if(p==Q.Rear) Q.Rear=Q.Front;
+	free(p);
+	return true;
+	
+}
+
+bool QueueEmpty(LinkQueue Q){
+	if(Q.Front==Q.Rear) return true;
+	else return false;
+}
+
+bool ClearQueue(LinkQueue &Q){
+	QueuePer p=Q.Front->next;
+	QueuePer q=p;
+	while(p){
+		p=p->next;
+		free(q);
+		q=p;
+	}
+	Q.Rear=Q.Front;
+	//删完之后队列清空 首尾指针相等	
+	return true;
+
+}
+int QueueLength(LinkQueue Q){
+	//返回队列的长度 
+	int length=0;
+	QueuePer p=Q.Front->next;
+	while(p){
+		length++;
+		p=p->next;		
+	} 
+	return length;	
+}
+
+bool GetHead(LinkQueue Q,QElemType &e){
+	//返回队列的队头元素	
+	if(Q.Front==Q.Rear) return false;
+	//队列为空
+	e=Q.Front->next->data;
+	return true;
+	
+}
+
+void Travrse(LinkQueue Q){
+	//遍历函数 
+	if(!Q.Front){
+		cout<<"Queue dose not exist!";
+		return;
+	}
+	if(Q.Front==Q.Rear) {
+		cout << "Queue is Empty!";
+		return ;
+	}
+	QueuePer p=Q.Front->next;
+	while(p){
+		
+		cout << p->data<<' ';
+		p=p->next;
+		
+	}
+		cout<<endl;	
+	return ;
+	
+}
+
+bool QueueTraverse(LinkQueue Q,bool(*visit)(QElemType)){
+	//队列元素执行函数VISIT() 。一旦visit执行失败，则操作失败 
+
+	if(Q.Front==Q.Rear) return false;
+	//队列为空
+	QueuePer p=Q.Front->next;
+	while(p){
+
+		if(!visit(p->data)) return false; 
+		
+		p=p->next;
+			
+	} 
+	
+	return true;
+	 
+}
+
+
+
+
+
+
+
